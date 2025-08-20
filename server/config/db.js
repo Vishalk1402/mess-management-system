@@ -1,10 +1,16 @@
 import mysql from "mysql2";
 import fs from "fs";
-
 import dotenv from "dotenv";
 
 dotenv.config();
 
+// If DB_CA_PEM exists, use it; otherwise undefined (for local)
+const sslOptions = process.env.DB_CA_PEM
+  ? { 
+      ca: process.env.DB_CA_PEM.replace(/\\n/g, '\n'), 
+      rejectUnauthorized: true 
+    }
+  : undefined;
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -12,10 +18,7 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-ssl: process.env.DB_SSL === 'true' ? {
-    ca: fs.readFileSync('./certs/isrgrootx1.pem'),
-    rejectUnauthorized: true
-  } : undefined
+  ssl: sslOptions
 });
 
 db.connect((err) => {
