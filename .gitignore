@@ -1,0 +1,13 @@
+# Backend certificates
+server/certs/isrgrootx1.pem
+
+# Node modules
+server/node_modules
+client/node_modules
+
+# Env files
+server/.env
+client/.env
+
+# React build
+client/build
