@@ -13,7 +13,7 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
 ssl: process.env.DB_SSL === 'true' ? {
-    ca: fs.readFileSync('./certs/ca.pem'),
+    ca: fs.readFileSync('./certs/isrgrootx1.pem'),
     rejectUnauthorized: true
   } : undefined
 });
