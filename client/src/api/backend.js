@@ -38,7 +38,7 @@ export const deleteMenuItem = (day, meal_type) =>
   api.delete(`/weekly-menu/${day}/${meal_type}`);
 
 // ================= PAYMENT =================
-export const createPayment = (paymentData) => api.post("/payment/create", paymentData);
+export const createPayment = (paymentData) => api.post("/payment/create-payment-order", paymentData);
 export const getPayments = () => api.get("/payment");
 
 // PhonePe
@@ -51,3 +51,4 @@ export const addNotice = (noticeData) => api.post("/notice/addnotice", noticeDat
 export const deleteNotice = (id) => api.delete(`/notice/${id}`);
 
 export default api;
+
