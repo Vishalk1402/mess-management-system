@@ -30,7 +30,7 @@ function PaymentPage() {
 
     try {
       // ✅ call your backend createPayment API
-      const { data: order } = await api.post("/payment/create", {
+      const { data: order } = await api.post("/payment/create-payment-order", {
         amount,
         receipt: `receipt_${Date.now()}`,
       });
