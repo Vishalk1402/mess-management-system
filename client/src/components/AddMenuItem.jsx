@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import {
+  getWeeklyMenu,
+  addMenuItem,
+  deleteMenuItem,
+  getNotices,
+  addNotice,
+  deleteNotice,
+} from "../api/backend"; // ✅ centralized API calls
 import { FaUtensils, FaCoffee, FaSun, FaMoon } from "react-icons/fa";
 
 const mealIcons = {
@@ -11,39 +18,51 @@ const mealIcons = {
 function MessDashboard() {
   const [menu, setMenu] = useState({});
   const [loading, setLoading] = useState(true);
-  const [selectedDay, setSelectedDay] = useState("Monday");
-  const [newMenuItem, setNewMenuItem] = useState({ day: "", meal_type: "", item_name: "" });
+  const [newMenuItem, setNewMenuItem] = useState({
+    day: "",
+    meal_type: "",
+    item_name: "",
+  });
   const [notices, setNotices] = useState([]);
   const [noticeInput, setNoticeInput] = useState("");
 
+  // ================= FETCH DATA =================
   useEffect(() => {
-    // Fetch weekly menu
-    axios.get("http://localhost:5000/api/weekly-menu/week")
+    fetchMenu();
+    fetchNotices();
+  }, []);
+
+  const fetchMenu = () => {
+    setLoading(true);
+    getWeeklyMenu()
       .then((res) => {
-        setMenu(res.data);
+        setMenu(res.data || {});
         setLoading(false);
       })
       .catch((err) => {
         console.error("Failed to fetch menu:", err);
         setLoading(false);
       });
+  };
 
-    // Fetch notices
-    axios.get("http://localhost:5000/api/notice/getnotice")
+  const fetchNotices = () => {
+    getNotices()
       .then((res) => {
-        setNotices(res.data);
+        setNotices(res.data || []);
       })
       .catch((err) => {
         console.error("Failed to fetch notices:", err);
       });
-  }, []);
+  };
 
+  // ================= MENU ACTIONS =================
   const handleAddMenuItem = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:5000/api/weekly-menu/add", newMenuItem)
-      .then((response) => {
+    addMenuItem(newMenuItem)
+      .then(() => {
         alert("Menu item added successfully!");
         setNewMenuItem({ day: "", meal_type: "", item_name: "" });
+        fetchMenu(); // refresh
       })
       .catch((err) => {
         console.error("Error adding menu item:", err);
@@ -52,20 +71,10 @@ function MessDashboard() {
   };
 
   const handleDeleteMenuItem = (day, meal_type) => {
-    axios
-      .delete(`http://localhost:5000/api/weekly-menu/delete`, {
-        data: { day, meal_type },
-      })
+    deleteMenuItem(day, meal_type)
       .then(() => {
         alert("Menu item deleted successfully!");
-        // Optionally refresh the menu
-        setMenu((prev) => {
-          const updated = { ...prev };
-          if (updated[day]) {
-            delete updated[day][meal_type];
-          }
-          return updated;
-        });
+        fetchMenu();
       })
       .catch((err) => {
         console.error("Error deleting menu item:", err);
@@ -73,24 +82,24 @@ function MessDashboard() {
       });
   };
 
-
+  // ================= NOTICE ACTIONS =================
   const handleAddNotice = () => {
-    if (noticeInput.trim()) {
-      axios.post("http://localhost:5000/api/notice/addnotice", { notice: noticeInput })
-        .then((response) => {
-          setNotices([...notices, { notice: noticeInput }]);
-          setNoticeInput("");
-        })
-        .catch((err) => {
-          console.error("Error adding notice:", err);
-        });
-    }
+    if (!noticeInput.trim()) return;
+    addNotice({ notice: noticeInput })
+      .then(() => {
+        setNoticeInput("");
+        fetchNotices();
+      })
+      .catch((err) => {
+        console.error("Error adding notice:", err);
+        alert("Failed to add notice.");
+      });
   };
 
   const handleDeleteNotice = (id) => {
-    axios.delete(`http://localhost:5000/api/notice/${id}`)
+    deleteNotice(id)
       .then(() => {
-        setNotices(notices.filter((notice) => notice.id !== id));
+        fetchNotices();
       })
       .catch((err) => {
         console.error("Error deleting notice:", err);
@@ -98,29 +107,43 @@ function MessDashboard() {
       });
   };
 
+  // ================= UI =================
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header */}
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-blue-700">Mess Dashboard</h1>
-        <p className="text-lg text-gray-600">Manage your Mess Menu & Notices</p>
+        <p className="text-lg text-gray-600">
+          Manage your Mess Menu & Notices
+        </p>
       </header>
 
       {/* Menu Overview */}
       <section className="mb-8">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-4">Weekly Menu Overview</h2>
+        <h2 className="text-3xl font-semibold text-blue-700 mb-4">
+          Weekly Menu Overview
+        </h2>
         {loading ? (
-          <p className="text-center text-lg text-gray-600 animate-pulse">Loading menu...</p>
+          <p className="text-center text-lg text-gray-600 animate-pulse">
+            Loading menu...
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(menu).map(([day, meals]) => (
               <div key={day} className="bg-white rounded shadow p-4">
-                <h3 className="text-xl font-semibold text-blue-600 mb-2">{day}</h3>
+                <h3 className="text-xl font-semibold text-blue-600 mb-2">
+                  {day}
+                </h3>
                 <ul className="space-y-1">
                   {Object.entries(meals).map(([mealType, item]) => (
-                    <li key={mealType} className="text-lg flex justify-between items-center gap-2">
+                    <li
+                      key={mealType}
+                      className="text-lg flex justify-between items-center gap-2"
+                    >
                       <div className="flex items-center gap-2">
-                        {mealIcons[mealType.toLowerCase()] || <FaUtensils className="text-gray-500" />}
+                        {mealIcons[mealType.toLowerCase()] || (
+                          <FaUtensils className="text-gray-500" />
+                        )}
                         <span className="capitalize">{mealType}:</span> {item}
                       </div>
                       <button
@@ -131,7 +154,6 @@ function MessDashboard() {
                       </button>
                     </li>
                   ))}
-
                 </ul>
               </div>
             ))}
@@ -141,26 +163,48 @@ function MessDashboard() {
 
       {/* Add New Menu Item */}
       <section className="mb-8">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-4">Add New Menu Item</h2>
-        <form onSubmit={handleAddMenuItem} className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-semibold text-blue-700 mb-4">
+          Add New Menu Item
+        </h2>
+        <form
+          onSubmit={handleAddMenuItem}
+          className="bg-white p-6 rounded-lg shadow-lg"
+        >
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">Day</label>
             <select
               value={newMenuItem.day}
-              onChange={(e) => setNewMenuItem({ ...newMenuItem, day: e.target.value })}
+              onChange={(e) =>
+                setNewMenuItem({ ...newMenuItem, day: e.target.value })
+              }
               className="w-full p-2 border rounded"
             >
               <option value="">Select Day</option>
-              {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
-                <option key={day} value={day}>{day}</option>
+              {[
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ].map((day) => (
+                <option key={day} value={day}>
+                  {day}
+                </option>
               ))}
             </select>
           </div>
+
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">Meal Type</label>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Meal Type
+            </label>
             <select
               value={newMenuItem.meal_type}
-              onChange={(e) => setNewMenuItem({ ...newMenuItem, meal_type: e.target.value })}
+              onChange={(e) =>
+                setNewMenuItem({ ...newMenuItem, meal_type: e.target.value })
+              }
               className="w-full p-2 border rounded"
             >
               <option value="">Select Meal Type</option>
@@ -171,15 +215,20 @@ function MessDashboard() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2">Item Name</label>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Item Name
+            </label>
             <input
               type="text"
               value={newMenuItem.item_name}
-              onChange={(e) => setNewMenuItem({ ...newMenuItem, item_name: e.target.value })}
+              onChange={(e) =>
+                setNewMenuItem({ ...newMenuItem, item_name: e.target.value })
+              }
               className="w-full p-2 border rounded"
               placeholder="Enter item name"
             />
           </div>
+
           <button
             type="submit"
             className="w-full p-2 bg-blue-600 text-white rounded font-semibold"
@@ -198,12 +247,17 @@ function MessDashboard() {
           ) : (
             <ul className="space-y-4">
               {notices.map((notice, index) => (
-                <li key={notice.id || index} className="bg-white p-4 rounded shadow flex justify-between items-start">
+                <li
+                  key={notice.id || index}
+                  className="bg-white p-4 rounded shadow flex justify-between items-start"
+                >
                   <div>
                     <p className="text-gray-800 font-medium">{notice.notice}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(notice.created_at).toLocaleString()}
-                    </p>
+                    {notice.created_at && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(notice.created_at).toLocaleString()}
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={() => handleDeleteNotice(notice.id)}
@@ -215,6 +269,7 @@ function MessDashboard() {
               ))}
             </ul>
           )}
+
           <div className="mt-6">
             <input
               type="text"
