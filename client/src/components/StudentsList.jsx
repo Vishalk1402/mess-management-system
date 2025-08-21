@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getStudents } from "../api/backend";
 
 function StudentsList() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/students/students")
+    getStudents()
       .then((res) => {
         setStudents(res.data);
         setLoading(false);
