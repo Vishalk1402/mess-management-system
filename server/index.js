@@ -1,22 +1,23 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes.js'; // Import the authentication routes
-import menuRoute from "./routes/menuRoute.js"; // Import the new route for weekly menu
-import paymentRoutes from './routes/paymentRoutes.js'; // Import the payment routes
-import noticeRoutes from './routes/noticeRoutes.js'; // Import the notice routes
-import StudentRoute from './routes/studentRoute.js'; // Import the student routes
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+
+// Routes
+import authRoutes from "./routes/authRoutes.js";
+import menuRoute from "./routes/menuRoute.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import noticeRoutes from "./routes/noticeRoutes.js";
+import studentRoute from "./routes/studentRoute.js";
 
 dotenv.config();
 const app = express();
 
-
+// ✅ CORS configuration
 const allowedOrigins = [
-  "http://localhost:5173", 
-  "https://mess-management-system-rust.vercel.app" 
+  "http://localhost:5173",
+  "https://your-frontend.vercel.app"
 ];
 
-// ✅ These MUST come BEFORE any route
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -26,24 +27,25 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    credentials: true,
   })
 );
+
 app.use(express.json());
 
-// ✅ Now define routes
+// ✅ Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/weekly-menu", menuRoute); 
+app.use("/api/weekly-menu", menuRoute);
 app.use("/api/payment", paymentRoutes);
-app.use("/api/notice", noticeRoutes); 
-app.use("/api/students",StudentRoute);
-app.use("/api/phonepe", paymentRoutes); // Add this line to use the payment routes
+app.use("/api/notice", noticeRoutes);
+app.use("/api/students", studentRoute);
 
-
-// Default route
-app.get('/', (req, res) => {
-  res.send('Server is running ✅');
+// Default root route
+app.get("/", (req, res) => {
+  res.send("Server is running ✅");
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
