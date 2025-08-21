@@ -15,7 +15,7 @@ const app = express();
 // ✅ CORS configuration
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://your-frontend.vercel.app"
+  "https://mess-management-system-rust.vercel.app"
 ];
 
 app.use(
