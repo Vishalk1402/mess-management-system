@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { FaUtensils, FaSun, FaMoon, FaCoffee } from "react-icons/fa";
+import { getWeeklyMenu, getNotices } from "../api/backend"; // ✅ import API helpers
 
 const mealIcons = {
   breakfast: <FaCoffee className="inline mr-1 text-yellow-500" />,
@@ -16,19 +16,12 @@ function HomePage() {
   const [currentNotice, setCurrentNotice] = useState(0);
 
   const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
   ];
 
   // Fetch weekly menu
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/weekly-menu/week")
+    getWeeklyMenu()
       .then((res) => {
         setMenu(res.data);
         setLoading(false);
@@ -41,16 +34,14 @@ function HomePage() {
 
   // Fetch notices
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/notice/getnotice")
+    getNotices()
       .then((res) => {
-        setNotices(res.data.map((notice) => notice.notice)); // check what to extract
+        setNotices(res.data.map((notice) => notice.notice));
       })
       .catch((err) => {
         console.error("Failed to fetch notices:", err);
       });
   }, []);
-  
 
   // Rotate notice every 5 seconds
   useEffect(() => {
@@ -67,7 +58,7 @@ function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-6">
       {/* Mess Name Section */}
       <div className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-blue-700">RS Mess</h1>
+        <h1 className="text-5xl font-bold text-blue-700">Mess</h1>
         <p className="text-lg text-gray-600 mt-2">Welcome to our Mess!</p>
       </div>
 
