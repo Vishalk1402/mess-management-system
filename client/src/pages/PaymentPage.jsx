@@ -1,8 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify"; // ✅ Toastify import
-import "react-toastify/dist/ReactToastify.css";          // ✅ Toastify styles
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import api from "../api/backend"; // ✅ use your api.js wrapper
 
 // Helper to load Razorpay script
 const loadRazorpayScript = () => {
@@ -23,42 +22,32 @@ function PaymentPage() {
     const scriptLoaded = await loadRazorpayScript();
 
     if (!scriptLoaded) {
-      toast.error("Failed to load Razorpay SDK. Check your internet connection.",{position: "top-center"});
+      toast.error("Failed to load Razorpay SDK. Check your internet connection.", {
+        position: "top-center",
+      });
       return;
     }
 
     try {
-      const { data: order } = await axios.post("http://localhost:5000/api/payment/create-payment-order", {
+      // ✅ call your backend createPayment API
+      const { data: order } = await api.post("/payment/create", {
         amount,
         receipt: `receipt_${Date.now()}`,
       });
 
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY,
+        key: import.meta.env.VITE_RAZORPAY_KEY, // from your .env
         amount: order.amount,
         currency: order.currency,
         name: "Mess Management",
         description: "Mess Payment",
         order_id: order.id,
         handler: async function (response) {
-          toast.success("✅ Payment Successful",{position: "top-center"});
+          toast.success("✅ Payment Successful", { position: "top-center" });
 
-          const res = await axios.post(
-            "http://localhost:5000/api/payment/generate-receipt",
-            {
-              name,
-              amount,
-              orderId: order.id,
-            },
-            { responseType: "blob" }
-          );
-
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", `receipt_${order.id}.pdf`);
-          document.body.appendChild(link);
-          link.click();
+          // ⚠️ if you want receipts, you need to implement /payment/receipt in backend
+          // For now, just confirm payment
+          console.log("Payment response:", response);
         },
         prefill: {
           name,
@@ -73,7 +62,7 @@ function PaymentPage() {
       const razor = new window.Razorpay(options);
       razor.open();
     } catch (err) {
-      toast.error("❌ Payment failed",{position: "top-center"});
+      toast.error("❌ Payment failed", { position: "top-center" });
       console.error(err);
     }
   };
@@ -108,6 +97,7 @@ function PaymentPage() {
           🚀 Pay Now
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }
