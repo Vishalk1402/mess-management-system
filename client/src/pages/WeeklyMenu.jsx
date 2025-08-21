@@ -1,25 +1,29 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getWeeklyMenu } from "../api/backend"; // <-- use your api.js helper instead of hardcoding axios
 
 function WeeklyMenu() {
   const [weeklyMenu, setWeeklyMenu] = useState({});
 
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/weekly-menu/week"); // Make sure this endpoint exists
-        setWeeklyMenu(res.data); // Expected format for each day: { breakfast: "item", lunch: "item", dinner: "item" }
-      } catch (err) {
-        alert(`Failed to load weekly menu ❌ `);
-      }
-    };
+  const fetchMenu = async () => {
+    try {
+      const res = await getWeeklyMenu();
+     
+      setWeeklyMenu(res.data || {});
+    } catch (err) {
+      console.error("❌ Weekly menu fetch error:", err);
+    }
+  };
 
-    fetchMenu();
-  }, []);
+  fetchMenu();
+}, []);
+
 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-yellow-50 to-orange-100">
-      <h1 className="text-3xl font-bold text-center mb-8 text-orange-700">🍽️ Weekly Mess Menu</h1>
+      <h1 className="text-3xl font-bold text-center mb-8 text-orange-700">
+        🍽️ Weekly Mess Menu
+      </h1>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-xl shadow-md border border-gray-200">
@@ -32,13 +36,18 @@ function WeeklyMenu() {
             </tr>
           </thead>
           <tbody>
-            {/* Render data for each day of the week */}
-            {Object.keys(weeklyMenu).map(day => (
+            {Object.keys(weeklyMenu).map((day) => (
               <tr key={day} className="border-t border-gray-200">
                 <td className="py-2 px-4 font-semibold">{day}</td>
-                <td className="py-2 px-4">{weeklyMenu[day]?.breakfast || "No Item"}</td>
-                <td className="py-2 px-4">{weeklyMenu[day]?.lunch || "No Item"}</td>
-                <td className="py-2 px-4">{weeklyMenu[day]?.dinner || "No Item"}</td>
+                <td className="py-2 px-4">
+                  {weeklyMenu[day]?.breakfast || "—"}
+                </td>
+                <td className="py-2 px-4">
+                  {weeklyMenu[day]?.lunch || "—"}
+                </td>
+                <td className="py-2 px-4">
+                  {weeklyMenu[day]?.dinner || "—"}
+                </td>
               </tr>
             ))}
           </tbody>
