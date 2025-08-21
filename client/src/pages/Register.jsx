@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/backend"; // ✅ use your centralized API helper
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -18,12 +18,12 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
-      alert("Registration Successful 🎉");
+      await registerUser(formData); // ✅ use API function
+      alert("🎉 Registration Successful");
       navigate("/");
     } catch (err) {
-      alert(err.response.data.error || "Registration Failed ❌");
-      console.log(err);
+      alert(err.response?.data?.error || "❌ Registration Failed");
+      console.error(err);
     }
   };
 
@@ -43,6 +43,7 @@ function Register() {
           type="text"
           name="username"
           placeholder="Username"
+          value={formData.username}         // ✅ controlled input
           onChange={handleChange}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
@@ -52,6 +53,7 @@ function Register() {
           type="password"
           name="password"
           placeholder="Password"
+          value={formData.password}         // ✅ controlled input
           onChange={handleChange}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
@@ -73,7 +75,7 @@ function Register() {
             type="text"
             name="messId"
             placeholder="Enter your Mess ID"
-            value={formData.messId}
+            value={formData.messId}         // ✅ controlled input
             onChange={handleChange}
             className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
