@@ -1,22 +1,23 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify"; // ✅ Toastify import
-import "react-toastify/dist/ReactToastify.css";          // ✅ Toastify styles
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { loginUser } from "../api/backend"; // ✅ use centralized API
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
 
-  const handleChange = e =>
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+      const res = await loginUser(formData); // ✅ centralized API
       const { token, role } = res.data;
 
+      // ✅ Save in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
@@ -30,10 +31,12 @@ function Login() {
         } else {
           navigate("/");
         }
-      }, 2000); // delay to show toast before redirect
+      }, 1500);
     } catch (err) {
-      toast.error("Only Owner can Login ❌", { position: "top-center" });
-      console.log(err);
+      const errorMsg =
+        err.response?.data?.message || "Login failed. Please try again.";
+      toast.error(errorMsg, { position: "top-center" });
+      console.error("Login error:", err);
     }
   };
 
@@ -54,6 +57,7 @@ function Login() {
           name="username"
           placeholder="Username"
           onChange={handleChange}
+          value={formData.username}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           required
         />
@@ -63,6 +67,7 @@ function Login() {
           name="password"
           placeholder="Password"
           onChange={handleChange}
+          value={formData.password}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           required
         />
@@ -76,13 +81,16 @@ function Login() {
 
         <p className="text-sm text-center text-gray-600">
           Don’t have an account?{" "}
-          <a href="/register" className="text-green-600 font-medium hover:underline">
+          <a
+            href="/register"
+            className="text-green-600 font-medium hover:underline"
+          >
             Register
           </a>
         </p>
       </form>
 
-      {/* ✅ Add ToastContainer at the bottom */}
+      {/* ✅ Toast container */}
       <ToastContainer />
     </div>
   );
