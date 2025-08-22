@@ -35,7 +35,9 @@ export const addStudent = (studentData) => api.post("/students/add", studentData
 export const getWeeklyMenu = () => api.get("/weekly-menu/week");
 export const addMenuItem = (itemData) => api.post("/weekly-menu/add", itemData);
 export const deleteMenuItem = (day, meal_type) =>
-  api.delete(`/weekly-menu/${day}/${meal_type}`);
+  api.delete(`/weekly-menu/delete`, {
+    data: { day, meal_type }
+  });
 
 // ================= PAYMENT =================
 export const createPayment = (paymentData) => api.post("/payment/create-payment-order", paymentData);
@@ -51,4 +53,5 @@ export const addNotice = (noticeData) => api.post("/notice/addnotice", noticeDat
 export const deleteNotice = (id) => api.delete(`/notice/${id}`);
 
 export default api;
+
 
