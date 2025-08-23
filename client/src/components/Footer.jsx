@@ -8,7 +8,7 @@ function Footer() {
 
         {/* Left Section */}
         <div className="text-center md:text-left space-y-3">
-          <h3 className="text-2xl font-bold text-white tracking-wide">RS Mess</h3>
+          <h3 className="text-2xl font-bold text-white tracking-wide">Mess</h3>
           <p className="text-sm text-gray-200">
             Serving healthy meals with tech simplicity.
           </p>
@@ -35,8 +35,8 @@ function Footer() {
               <FaInstagram />
             </a>
           </div>
-          <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} RS Mess. All rights reserved.</p>
-          <p className="text-xs text-gray-400">Designed with ❤️ by Team VK</p>
+          <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Mess. All rights reserved.</p>
+          <p className="text-xs text-gray-400">Designed with ❤️ by Team DV</p>
         </div>
       </div>
 
