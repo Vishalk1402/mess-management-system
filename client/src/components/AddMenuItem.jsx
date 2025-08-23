@@ -8,6 +8,7 @@ import {
   deleteNotice,
 } from "../api/backend"; // ✅ centralized API calls
 import { FaUtensils, FaCoffee, FaSun, FaMoon } from "react-icons/fa";
+import {  toast } from "react-toastify";
 
 const mealIcons = {
   breakfast: <FaCoffee className="inline mr-1 text-yellow-500" />,
@@ -60,25 +61,25 @@ function MessDashboard() {
     e.preventDefault();
     addMenuItem(newMenuItem)
       .then(() => {
-        alert("Menu item added successfully!");
+        toast.success("Menu item added successfully!");
         setNewMenuItem({ day: "", meal_type: "", item_name: "" });
         fetchMenu(); // refresh
       })
       .catch((err) => {
         console.error("Error adding menu item:", err);
-        alert("Failed to add menu item.");
+        toast.error("Failed to add menu item.");
       });
   };
 
   const handleDeleteMenuItem = (day, meal_type) => {
     deleteMenuItem(day, meal_type)
       .then(() => {
-        alert("Menu item deleted successfully!");
+        toast.success("Menu item deleted successfully!");
         fetchMenu();
       })
       .catch((err) => {
         console.error("Error deleting menu item:", err);
-        alert("Failed to delete menu item.");
+        toast.success("Failed to delete menu item.");
       });
   };
 
@@ -92,7 +93,7 @@ function MessDashboard() {
       })
       .catch((err) => {
         console.error("Error adding notice:", err);
-        alert("Failed to add notice.");
+        toast.success("Failed to add notice.");
       });
   };
 
@@ -103,7 +104,7 @@ function MessDashboard() {
       })
       .catch((err) => {
         console.error("Error deleting notice:", err);
-        alert("Failed to delete notice.");
+        toast.error("Failed to delete notice.");
       });
   };
 
@@ -287,6 +288,7 @@ function MessDashboard() {
           </div>
         </div>
       </section>
+     
     </div>
   );
 }
