@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {  toast } from "react-toastify";
+<<<<<<< HEAD
 
+=======
+>>>>>>> 20618ea (Update)
 import { loginUser } from "../api/backend"; // ✅ use centralized API
 
 function Login() {
@@ -39,6 +42,7 @@ function Login() {
       console.error("Login error:", err);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-100">
@@ -88,7 +92,12 @@ function Login() {
             Register
           </a>
         </p>
+<<<<<<< HEAD
       </form>
+=======
+      </form>    
+    
+>>>>>>> 20618ea (Update)
     </div>
   );
 }
