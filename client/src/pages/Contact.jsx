@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -10,7 +11,7 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Your message has been sent ✅");
+    toast.success("Your message has been sent ✅");
     setForm({ name: "", email: "", message: "" });
     // You can also send the form to a backend here
   };
