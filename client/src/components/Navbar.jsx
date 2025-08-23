@@ -10,7 +10,7 @@ function Navbar() {
   return (
     <nav className="bg-green-600 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-2xl font-bold">RS Mess</div>
+        <div className="text-2xl font-bold">Mess</div>
 
         {/* Desktop menu */}
         <ul className="hidden md:flex space-x-6 text-base">
