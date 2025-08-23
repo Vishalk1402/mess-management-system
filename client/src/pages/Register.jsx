@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/backend"; // ✅ use your centralized API helper
+import { registerUser } from "../api/backend"; 
+import { toast } from "react-toastify";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -18,11 +19,11 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await registerUser(formData); // ✅ use API function
-      alert("🎉 Registration Successful");
+      await registerUser(formData); 
+      toast.success("🎉 Registration Successful");
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.error || "❌ Registration Failed");
+      toast.error(err.response?.data?.error || "❌ Registration Failed");
       console.error(err);
     }
   };
@@ -43,7 +44,7 @@ function Register() {
           type="text"
           name="username"
           placeholder="Username"
-          value={formData.username}         // ✅ controlled input
+          value={formData.username}
           onChange={handleChange}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
@@ -53,7 +54,7 @@ function Register() {
           type="password"
           name="password"
           placeholder="Password"
-          value={formData.password}         // ✅ controlled input
+          value={formData.password}
           onChange={handleChange}
           className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
@@ -69,13 +70,12 @@ function Register() {
           <option value="owner">Owner</option>
         </select>
 
-        {/* Conditionally show Mess ID input for owners */}
         {formData.role === "owner" && (
           <input
             type="text"
             name="messId"
             placeholder="Enter your Mess ID"
-            value={formData.messId}         // ✅ controlled input
+            value={formData.messId}
             onChange={handleChange}
             className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
