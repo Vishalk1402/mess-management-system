@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import api from "../api/backend"; // ✅ use your api.js wrapper
+import { toast } from "react-toastify";
+
+import api from "../api/backend"; 
 
 // Helper to load Razorpay script
 const loadRazorpayScript = () => {
@@ -97,7 +97,6 @@ function PaymentPage() {
           🚀 Pay Now
         </button>
       </div>
-      <ToastContainer />
     </div>
   );
 }
