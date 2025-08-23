@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:5000/api"
-    : "https://mess-management-system-ayv2.onrender.com/api";
+    : "https://mess-management-system-2.onrender.com";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -53,5 +53,6 @@ export const addNotice = (noticeData) => api.post("/notice/addnotice", noticeDat
 export const deleteNotice = (id) => api.delete(`/notice/${id}`);
 
 export default api;
+
 
 
