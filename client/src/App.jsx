@@ -10,6 +10,9 @@ import Register from "./pages/Register";
 import Guidelines from "./pages/guide";
 import Contact from "./pages/Contact";
 
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (        
         
@@ -25,6 +28,10 @@ function App() {
         <Route path="/guide" element={<><Navbar /><Guidelines /><Footer /></>} />
         <Route path="/Contact" element={<><Navbar /><Contact /><Footer /></>} />
       </Routes>
+      <ToastContainer
+         position="top-center" 
+        autoClose={2000} 
+      />
     </BrowserRouter>
   );
 }
