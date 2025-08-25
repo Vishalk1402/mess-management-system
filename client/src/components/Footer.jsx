@@ -36,7 +36,7 @@ function Footer() {
             </a>
           </div>
           <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Mess. All rights reserved.</p>
-          <p className="text-xs text-gray-400">Designed with ❤️ by Team DV</p>
+          <p className="text-xs text-gray-400">Designed with ❤️ by Team Spirit</p>
         </div>
       </div>
 
