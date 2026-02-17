@@ -53,6 +53,3 @@ export const addNotice = (noticeData) => api.post("/notice/addnotice", noticeDat
 export const deleteNotice = (id) => api.delete(`/notice/${id}`);
 
 export default api;
-
-
-

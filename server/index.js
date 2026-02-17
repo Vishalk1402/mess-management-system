@@ -14,8 +14,13 @@ const app = express();
 
 // ✅ CORS configuration
 const allowedOrigins = [
+<<<<<<< HEAD
   "http://localhost:5173",
   "https://mess-management-system-rust.vercel.app"
+=======
+  "http://localhost:5174",
+  "https://mess-management-system1.onrender.com/"
+>>>>>>> e11879b (controllers update in server)
 ];
 
 app.use(
@@ -27,6 +32,10 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+<<<<<<< HEAD
+=======
+    credentials: true,
+>>>>>>> e11879b (controllers update in server)
   })
 );
 

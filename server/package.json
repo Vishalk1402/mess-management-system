@@ -21,6 +21,5 @@
     "nodemon": "^3.1.10",
     "pdfkit": "^0.17.1",
     "razorpay": "^2.9.6"
-  },
-  "devDependencies": {}
+  }
 }

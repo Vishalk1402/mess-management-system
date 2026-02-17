@@ -45,8 +45,6 @@ function PaymentPage() {
         handler: async function (response) {
           toast.success("✅ Payment Successful", { position: "top-center" });
 
-          // ⚠️ if you want receipts, you need to implement /payment/receipt in backend
-          // For now, just confirm payment
           console.log("Payment response:", response);
         },
         prefill: {

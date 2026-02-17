@@ -36,7 +36,11 @@ function Footer() {
             </a>
           </div>
           <p className="text-sm text-gray-300">&copy; {new Date().getFullYear()} Mess. All rights reserved.</p>
+<<<<<<< HEAD
           <p className="text-xs text-gray-400">Designed with ❤️ by Team Spirit</p>
+=======
+          <p className="text-xs text-gray-400">Designed with ❤️ by Team VK</p>
+>>>>>>> e11879b (controllers update in server)
         </div>
       </div>
 

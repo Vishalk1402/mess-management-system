@@ -13,7 +13,6 @@ const Contact = () => {
     e.preventDefault();
     toast.success("Your message has been sent ✅");
     setForm({ name: "", email: "", message: "" });
-    // You can also send the form to a backend here
   };
 
   return (
