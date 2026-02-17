@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {  toast } from "react-toastify";
-<<<<<<< HEAD
-
-=======
->>>>>>> 20618ea (Update)
-import { loginUser } from "../api/backend"; // ✅ use centralized API
+import { toast } from "react-toastify";
+import { loginUser } from "../api/backend"; // centralized API
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -17,10 +13,10 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await loginUser(formData); // ✅ centralized API
+      const res = await loginUser(formData);
       const { token, role } = res.data;
 
-      // ✅ Save in localStorage
+      // Save in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
@@ -42,7 +38,6 @@ function Login() {
       console.error("Login error:", err);
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-100">
@@ -92,12 +87,7 @@ function Login() {
             Register
           </a>
         </p>
-<<<<<<< HEAD
       </form>
-=======
-      </form>    
-    
->>>>>>> 20618ea (Update)
     </div>
   );
 }

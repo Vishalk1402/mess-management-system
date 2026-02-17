@@ -12,15 +12,11 @@ import studentRoute from "./routes/studentRoute.js";
 dotenv.config();
 const app = express();
 
-// ✅ CORS configuration
+// CORS configuration
 const allowedOrigins = [
-<<<<<<< HEAD
   "http://localhost:5173",
-  "https://mess-management-system-rust.vercel.app"
-=======
   "http://localhost:5174",
-  "https://mess-management-system1.onrender.com/"
->>>>>>> e11879b (controllers update in server)
+  "https://mess-management-system1.onrender.com"
 ];
 
 app.use(
@@ -29,31 +25,27 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(null, true); // allow for render health checks
       }
     },
-<<<<<<< HEAD
-=======
     credentials: true,
->>>>>>> e11879b (controllers update in server)
   })
 );
 
 app.use(express.json());
 
-// ✅ Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/weekly-menu", menuRoute);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/notice", noticeRoutes);
 app.use("/api/students", studentRoute);
 
-// Default root route
+// Root route
 app.get("/", (req, res) => {
   res.send("Server is running ✅");
 });
 
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
